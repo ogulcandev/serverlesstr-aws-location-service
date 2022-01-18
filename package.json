@@ -1,0 +1,19 @@
+{
+  "name": "serverlesstr-aws-location-service",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": "https://github.com/ogulcandev/serverlesstr-aws-location-service.git",
+  "scripts": {
+    "start": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "author": "Oğulcan TÜRK <hi@ogulcan.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel": "^2.2.1"
+  }
+}
