@@ -1,6 +1,14 @@
+// Tailwind
+import './assets/tailwind.css'
+
+// Views
+import Home from './views/home';
+
 const App = () => {
   return (
-    <h1>AWS Location Service Demo - ServerlessTR</h1>
+    <>
+      <Home />
+    </>
   );
 };
 
