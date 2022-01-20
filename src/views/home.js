@@ -14,8 +14,8 @@ const Home = () => {
 
   const mapRef = useRef(null);
   const markerRef = useRef(null);
-  const [currentLocation, setCurrentLocation] = useState([29.057074963280257, 40.96790426401776]);
   const [client, setClient] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState([29.057074963280257, 40.96790426401776]);
 
   function handleLocationChange() {
     const {lng, lat} = markerRef.current.getLngLat();
@@ -74,7 +74,9 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    updateDeviceLocation();
+    if (client !== null) {
+      updateDeviceLocation();
+    }
   }, [currentLocation]);
 
   return (
