@@ -1,12 +1,8 @@
 // Amplify
 import Amplify from "aws-amplify";
+import awsconfig from './aws-exports';
 
-Amplify.configure({
-  Auth: {
-    identityPoolId: 'bc7eb79a-d3b2-4589-a16d-41d3a5cd8dc3',
-    region: 'eu-central-1'
-  }
-});
+Amplify.configure(awsconfig);
 
 // Tailwind
 import './assets/tailwind.css'
