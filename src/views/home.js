@@ -12,45 +12,51 @@ import * as AWS from "@aws-sdk/client-location";
 
 const Home = () => {
 
-  const credentials = Auth.currentCredentials();
-  const client = new AWS.Location({
-    credentials,
-    region: "eu-central-1"
-  });
-
-  const marker = new Marker();
-
   const mapRef = useRef(null);
+  const markerRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState([29.057074963280257, 40.96790426401776]);
+  const [client, setClient] = useState(null);
 
   function handleLocationChange() {
-    const {lng, lat} = marker.getLngLat();
-    console.log('Current location changed!', [lng, lat]);
+    const {lng, lat} = markerRef.current.getLngLat();
     setCurrentLocation([lng, lat]);
   };
 
-  useEffect(() => {
-    async function initializeMap() {
-      if (mapRef.current != null) {
-        map = await createMap({
-          container: mapRef.current,
-          center: [29.027333812492884, 40.986657335813845],
-          zoom: 12,
-        });
-        marker
-          .setLngLat(currentLocation)
-          .setDraggable(true)
-          .on('dragend', handleLocationChange)
-          .addTo(map)
-      }
-    }
-    initializeMap();
-  }, []);
+  async function initializeMap() {
+    // Eğer mapRef null değilse
+    if (mapRef.current != null) {
+      // Haritayı oluştur
+      map = await createMap({
+        container: mapRef.current,
+        center: [29.027333812492884, 40.986657335813845],
+        zoom: 12,
+      });
+    };
+  };
 
-  useEffect(async () => {
-    // Log
-    console.log('Current location', currentLocation);
-    // Send track data
+  async function createMarker() {
+    // Oluştur
+    markerRef.current = new Marker();
+    // Ekle
+    markerRef.current
+      .setLngLat(currentLocation)
+      .setDraggable(true)
+      .on('dragend', handleLocationChange)
+      .addTo(map)
+  };
+
+  async function createClient() {
+    const credentials = await Auth.currentCredentials();
+    const client = new AWS.Location({
+      credentials,
+      region: "eu-central-1"
+    });
+    setClient(client);
+  };
+
+  function updateDeviceLocation() {
+    console.log('Location changed: ', currentLocation);
+    //
     client.batchUpdateDevicePosition({
       TrackerName: 'lsdemotracker-dev',
       Updates: [{
@@ -59,7 +65,17 @@ const Home = () => {
         SampleTime: new Date()
       }]
     });
-  },[currentLocation]);
+  };
+
+  useEffect(async () => {
+    await initializeMap();
+    await createMarker();
+    await createClient();
+  }, []);
+
+  useEffect(() => {
+    updateDeviceLocation();
+  }, [currentLocation]);
 
   return (
     <div className="bg-gray-50">
